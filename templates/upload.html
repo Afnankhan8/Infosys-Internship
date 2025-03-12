@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Upload & Verify - Secure Document Verification System</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Document Verification System" name="keywords">
+    <meta content="Upload and verify identity documents securely" name="description">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Bootstrap Stylesheet -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #4A90E2;
+            --secondary: #0056b3;
+            --light: #E9F7FF;
+            --dark: #003366;
+            --accent: #66B2FF;
+            --text: #333;
+            --text-light: #666;
+            --border: #CED4DA;
+            --bg-light: #F8F9FA;
+            --bg-dark: #343A40;
+            --success: #28A745;
+            --warning: #FFC107;
+            --danger: #DC3545;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text);
+            background-color: var(--bg-light);
+            line-height: 1.6;
+        }
+
+        .navbar {
+            background-color: var(--light);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand h1 {
+            color: var(--primary);
+            font-size: 2rem;
+        }
+
+        .hero-header {
+            background-color: var(--primary);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .upload-section {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+        }
+
+        .upload-box {
+            border: 2px dashed var(--border);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background-color: var(--light);
+        }
+
+        .upload-box:hover {
+            border-color: var(--primary);
+            background-color: rgba(74, 144, 226, 0.1);
+        }
+
+        .result-card {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            background-color: #f8f9fa; /* Light background for better contrast */
+        }
+
+        .result-card .card-header {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 500;
+            padding: 16px;
+        }
+
+        .footer {
+            background-color: var(--dark);
+            padding: 50px 0;
+            color: white;
+        }
+
+        .footer .btn.btn-social {
+            margin-right: 8px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transition: .3s;
+        }
+
+        .footer .btn.btn-social:hover {
+            background: var(--accent);
+        }
+
+        .footer .btn.btn-link {
+            color: rgba(255, 255, 255, 0.8);
+            transition: .3s;
+        }
+
+        .footer .btn.btn-link:hover {
+            color: var(--accent);
+        }
+
+        .section-title {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .section-title h6 {
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .section-title h2 {
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .progress {
+            height: 10px;
+            border-radius: 10px;
+        }
+
+        .progress-bar {
+            background-color: var(--primary);
+        }
+
+        .text-success {
+            color: var(--success) !important;
+        }
+
+        .text-warning {
+            color: var(--warning) !important;
+        }
+
+        .text-danger {
+            color: var(--danger) !important;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: rgba(74, 144, 226, 0.1);
+        }
+
+        /* New styles for the detailed results table */
+        .results-table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .results-table th, .results-table td {
+            border: 1px solid var(--border);
+            padding: 12px;
+            text-align: center;
+        }
+
+        .results-table th {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .results-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .results-table tr:hover {
+            background-color: rgba(74, 144, 226, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-xxl bg-white p-0">
+        <!-- Navbar & Hero Start -->
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <a href="index.html" class="navbar-brand p-0">
+                <h1 class="m-0"><i class="fa fa-fingerprint me-2"></i>SecureAadhar<span class="fs-5">.io</span></h1>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                <span class="fa fa-bars"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <div class="navbar-nav ms-auto">
+                    <a href="{{ url_for('index') }}" class="nav-item nav-link">Home</a>
+                    <a href="{{ url_for('upload_page') }}" class="nav-item nav-link active">Import</a>
+                    <a href="{{ url_for('analytics_page') }}" class="nav-item nav-link">Dashboard</a>
+                </div>
+            </div>
+        </nav>
+
+        <div class="hero-header">
+            <h1>Verify Documents</h1>
+            <hr class="bg-light mx-auto mt-0" style="width: 90px;">
+        </div>
+        <!-- Navbar & Hero End -->
+
+        <!-- Upload Section Start -->
+        <div class="container-xxl py-5">
+            <div class="container">
+                <div class="section-title">
+                    <h6>Document Verification</h6>
+                    <h2>Upload Documents for Secure Verification</h2>
+                </div>
+                <div class="row g-4 mb-5">
+                    <div class="col-lg-8 mx-auto">
+                        <div class="upload-section">
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <h5 class="mb-3">Upload Documents ZIP File</h5>
+                                    <div class="upload-box" id="zipUpload">
+                                        <i class="fas fa-file-archive fa-3x mb-3"></i>
+                                        <h6>Drag & Drop ZIP file</h6>
+                                        <p class="small text-muted">or click to browse</p>
+                                        <input type="file" id="zipFileInput" accept=".zip" class="d-none">
+                                    </div>
+                                    <p class="mt-2 small text-muted" id="zipFileName">No file selected</p>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <h5 class="mb-3">Upload Reference Data</h5>
+                                    <div class="upload-box" id="excelUpload">
+                                        <i class="fas fa-file-excel fa-3x mb-3"></i>
+                                        <h6>Drag & Drop XLSX file</h6>
+                                        <p class="small text-muted">or click to browse</p>
+                                        <input type="file" id="excelFileInput" accept=".xlsx,.xls" class="d-none">
+                                    </div>
+                                    <p class="mt-2 small text-muted" id="excelFileName">No file selected</p>
+                                </div>
+                            </div>
+                            <div class="text-center mt-4">
+                                <button class="btn btn-primary py-3 px-5" id="verifyBtn" disabled>Start Verification Process</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Verification Process Section -->
+                <div class="row mb-5" id="verificationProgress" style="display: none;">
+                    <div class="col-lg-8 mx-auto">
+                        <div class="progress-card">
+                            <h4 class="mb-4">Verification in Progress</h4>
+                            <div class="progress mb-4">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%" id="progressBar"></div>
+                            </div>
+                            <div class="steps mt-4">
+                                <div class="step">
+                                    <div class="step-number">1</div>
+                                    <div class="step-text">Extracting Files</div>
+                                    <div class="ms-auto" id="step1Status"><span class="badge bg-secondary">Pending</span></div>
+                                </div>
+                                <div class="step">
+                                    <div class="step-number">2</div>
+                                    <div class="step-text">Processing Documents</div>
+                                    <div class="ms-auto" id="step2Status"><span class="badge bg-secondary">Pending</span></div>
+                                </div>
+                                <div class="step">
+                                    <div class="step-number">3</div>
+                                    <div class="step-text">AI Analysis</div>
+                                    <div class="ms-auto" id="step3Status"><span class="badge bg-secondary">Pending</span></div>
+                                </div>
+                                <div class="step">
+                                    <div class="step-number">4</div>
+                                    <div class="step-text">Report</div>
+                                    <div class="ms-auto" id="step4Status"><span class="badge bg-secondary">Pending</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Section -->
+                <div class="row g-4" id="resultsSection" style="display: none;">
+                    <div class="col-12">
+                        <h4 class="mb-4 text-center">Verification Results</h4>
+                    </div>
+                    <!-- Summary Card -->
+                    <div class="col-lg-4">
+                        <div class="result-card">
+                            <div class="card-header text-center">
+                                <h5 class="mb-0">Results Summary</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between mb-3">
+                                    <span>Total Documents:</span>
+                                    <strong id="totalCards">0</strong>
+                                </div>
+                                <div class="d-flex justify-content-between mb-3">
+                                    <span>Verified:</span>
+                                    <strong class="text-success" id="verifiedCards">0</strong>
+                                </div>
+                                <div class="d-flex justify-content-between mb-3">
+                                    <span>Requires Review:</span>
+                                    <strong class="text-warning" id="suspiciousCards">0</strong>
+                                </div>
+                                <div class="d-flex justify-content-between mb-3">
+                                    <span>Invalid:</span>
+                                    <strong class="text-danger" id="fraudulentCards">0</strong>
+                                </div>
+                                <hr>
+                                <div class="text-center mt-3">
+                                    <a href="#" class="btn btn-primary w-100" id="downloadReport">Download Full Report</a>
+                                </div>
+                                <div class="text-center mt-3">
+                                    <a href="{{ url_for('analytics_page') }}" class="btn btn-outline-primary w-100">View Analytics Dashboard</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Results Table -->
+                    <div class="col-lg-8">
+                        <div class="result-card">
+                            <div class="card-header text-center">
+                                <h5 class="mb-0">Detailed Results</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="results-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Sr No</th>
+                                                <th>Name</th>
+                                                <th>Status</th>
+                                                <th>Confidence</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="resultsTable">
+                                            <tr>
+                                                <td colspan="4" class="text-center">No data available</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <nav aria-label="Page navigation" class="mt-4">
+                                    <ul class="pagination justify-content-center" id="pagination">
+                                        <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+                                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Upload Section End -->
+
+        <!-- Footer Start -->
+        <div class="container-fluid footer text-light mt-5 pt-5">
+            <div class="container">
+                <div class="row g-5">
+                    <div class="col-md-6 col-lg-4">
+                        <h5 class="text-white mb-4">Contact Us</h5>
+                        <p><i class="fa fa-map-marker-alt me-3"></i>456 Tech Park, Mumbai, India</p>
+                        <p><i class="fa fa-phone-alt me-3"></i>+91 87654 32109</p>
+                        <p><i class="fa fa-envelope me-3"></i>contact@docuverify.io</p>
+                        <div class="d-flex pt-2">
+                            <a class="btn btn-social" href=""><i class="fab fa-twitter"></i></a>
+                            <a class="btn btn-social" href=""><i class="fab fa-facebook-f"></i></a>
+                            <a class="btn btn-social" href=""><i class="fab fa-instagram"></i></a>
+                            <a class="btn btn-social" href=""><i class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <h5 class="text-white mb-4">Quick Links</h5>
+                        <a class="btn btn-link" href="{{ url_for('index') }}">Home</a>
+                        <a class="btn btn-link" href="{{ url_for('upload_page') }}">Upload & Verify</a>
+                        <a class="btn btn-link" href="{{ url_for('analytics_page') }}">Analytics</a>
+                        <a class="btn btn-link" href="">Privacy Policy</a>
+                        <a class="btn btn-link" href="">Terms & Conditions</a>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <h5 class="text-white mb-4">Newsletter</h5>
+                        <p>Subscribe to get the latest updates on security and verification technology</p>
+                        <div class="position-relative w-100 mt-3">
+                            <input class="form-control border-0 rounded-pill w-100 ps-4 pe-5" type="text" placeholder="Your Email" style="height: 48px;">
+                            <button type="button" class="btn shadow-none position-absolute top-0 end-0 mt-1 me-2"><i class="fa fa-paper-plane fs-4"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="copyright">
+                    <div class="row">
+                        <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                            &copy; <a class="border-bottom" href="#">SecureAadhaar.io</a>, All Rights Reserved. 
+                        </div>
+                        <div class="col-md-6 text-center text-md-end">
+                            <div class="footer-menu">
+                                <a href="">Home</a>
+                                <a href="">Support</a>
+                                <a href="">FAQ</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Footer End -->
+
+        <!-- Back to Top -->
+        <a href="#" class="btn btn-primary back-to-top"><i class="bi bi-arrow-up"></i></a>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/upload.js') }}"></script>
+</body>
+
+</html>
